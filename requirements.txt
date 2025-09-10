@@ -3,3 +3,5 @@ pandas
 openai
 groq
 aiohttp
+tenacity
+tqdm
