@@ -5,3 +5,6 @@ groq
 aiohttp
 tenacity
 tqdm
+transformers
+torch
+random
