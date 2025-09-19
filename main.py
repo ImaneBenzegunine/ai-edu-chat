@@ -89,8 +89,8 @@ for idx, row in df.iterrows():
     rules = generate_rules(problem)
     rules = clean_text(rules)     
     rules_list.append(rules)
-    print(f"rules {rules}...")
-    print(f"rules_list {clean_text(rules_list)}...")
+    # print(f"rules {rules}...")
+    # print(f"rules_list {clean_text(rules_list)}...")
 
     
     # Optional: Add a small delay to avoid rate limiting
