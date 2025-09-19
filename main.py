@@ -1,7 +1,10 @@
 import pandas as pd
 from groq import Groq
 import os
+import re
 
+from dotenv import load_dotenv
+load_dotenv()
 # -----------------------------
 # Step 1: Load dataset locally
 # -----------------------------
@@ -51,6 +54,28 @@ def generate_rules(problem_text):
         print(f"Error: {e}")
         return "Rules generation failed"
 
+# Remove Latex code 
+def clean_text(text: str) -> str:
+    if not isinstance(text, str):
+        return text
+
+    # 1. Remove LaTeX math ($...$)
+    text = re.sub(r'\$.*?\$', '', text)
+
+    # 2. Remove LaTeX commands (\sqrt{}, \frac{}, etc.)
+    text = re.sub(r'\\[a-zA-Z]+\{[^}]*\}', '', text)
+    text = re.sub(r'\\[a-zA-Z]+', '', text)
+
+    # 3. Replace newlines and bullet markers
+    text = text.replace('\n*', ' ')   # remove newline + bullet
+    text = text.replace('\n', ' ')    # remove remaining newlines
+    text = text.replace('*', '-')     # convert bullets to dashes for readability
+
+    # 4. Remove double spaces
+    text = re.sub(r'\s+', ' ', text)
+
+    return text.strip()
+
 # -----------------------------
 # Step 3: Generate 'rules' column
 # -----------------------------
@@ -62,7 +87,11 @@ for idx, row in df.iterrows():
     print(f"Processing row {idx+1}/{total_rows}...")
     
     rules = generate_rules(problem)
+    rules = clean_text(rules)     
     rules_list.append(rules)
+    # print(f"rules {rules}...")
+    # print(f"rules_list {clean_text(rules_list)}...")
+
     
     # Optional: Add a small delay to avoid rate limiting
     import time
